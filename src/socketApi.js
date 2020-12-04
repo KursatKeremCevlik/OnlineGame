@@ -137,7 +137,7 @@ setInterval(() => {
         io.sockets.emit('WINNER_NAME', {name: player.name});
       });
     }
-    if(Date.now() - coinTime > 5000){
+    if(Date.now() - coinTime > 3500){
       coinTime = Date.now();
       addCoin();
     }
