@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="/js"></script>
+  <link rel="stylesheet" href="/css">
+  <title>Document</title>
+</head>
+<body>
+  <img src="/tile0" id="tile0" style="display: none;">
+  <img src="/tile1" id="tile1" style="display: none;">
+  <img src="/chrc0" id="chrc0" style="display: none;">
+  <img src="/chrc1" id="chrc1" style="display: none;">
+  <img src="/chrc2" id="chrc2" style="display: none;">
+  <img src="/chrc3" id="chrc3" style="display: none;">
+  <div class="canvas-home" id="canvas-home">
+    <canvas id="myCanvas" width="640" height="448"></canvas>
+  </div>
+  <div class="name-area">
+    <input type="text" id="name" minlength="1" maxlength="7" autocomplete="off">
+    <input type="button" id="permiss" value="join">
+  </div>
+</body>
+</html>
