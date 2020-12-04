@@ -131,6 +131,18 @@ $(() => {
                   ctx.fillText(`GAME START WITH ${remainingPeople} PEOPLE`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
                 }
               }
+              ctx.drawImage(
+                images.users[UserArr[i].type], 
+                UserArr[i].x - TILE_WIDTH/2, UserArr[i].y - TILE_HEIGHT/2
+              );
+              ctx.font = '18px comic sans';
+              ctx.fillStyle = 'black';
+              ctx.textAlign = "center";
+              ctx.fillText(UserArr[i].name, UserArr[i].x, UserArr[i].y - 20);
+              ctx.font = '14px arial';
+              ctx.fillStyle = 'white';
+              ctx.textAlign = "left";
+              ctx.fillText(`BAKIYE: ₺${currentPlayer.coins}`, 20, CANVAS_HEIGHT - 20);
             }
             for(var i = 0; i < CoinArr.length; i++){
               ctx.drawImage(
