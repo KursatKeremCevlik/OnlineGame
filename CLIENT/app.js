@@ -47,12 +47,26 @@ $(() => {
             0: Coin
           }
         }
+
+        let circleCenterX;
+        let circleCenterY;
+        let circleClosingDistance;
+        let isGameOver = false;
+        let isGameRunning = false;
     
         let mainMap;
         /*ctx.drawImage(images.tiles[1], 0, 0, TILE_WIDTH, TILE_HEIGHT,
         0, 0,
         TILE_WIDTH, TILE_HEIGHT); */
         socket.on('MAP_UPDATE', (map) => {mainMap = map});
+        socket.on('GAME_STATE', (data) => {
+          isGameRunning = data.isGameRunning;
+        });
+        socket.on('CIRCLE_UPDATE', (data) => {
+          circleCenterX = data.circleCenterX;
+          circleCenterY = data.circleCenterY;
+          circleClosingDistance = data.circleClosingDistance;
+        });
         const drawMap = () => {
           if(mainMap){
             for(var i = 0; i < mainMap.length; i++){
@@ -65,7 +79,16 @@ $(() => {
             }
           }
         }
-        const updateUser = (UserArr, CoinArr) => {
+        const updateCircle = () => {
+          ctx.beginPath();
+          ctx.fillStyle = 'lightred';
+          ctx.arc(
+            circleCenterX, circleCenterY,
+            circleClosingDistance,
+            0, 2*Math.PI);
+          ctx.stroke();
+        }
+        const updateUsers = (UserArr, CoinArr) => {
           let currentPlayer;
           for(var i = 0; i < UserArr.length; i++){
             if(UserArr[i].id == socket.id){
@@ -76,18 +99,38 @@ $(() => {
             ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
             drawMap();
             for(var i = 0; i < UserArr.length; i++){
-              ctx.drawImage(
-                images.users[UserArr[i].type], 
-                UserArr[i].x - TILE_WIDTH/2, UserArr[i].y - TILE_HEIGHT/2
-              );
-              ctx.font = '18px comic sans';
-              ctx.fillStyle = 'black';
-              ctx.textAlign = "center";
-              ctx.fillText(currentPlayer.name, currentPlayer.x, currentPlayer.y - 20);
-              ctx.font = '14px arial';
-              ctx.fillStyle = 'white';
-              ctx.textAlign = "left";
-              ctx.fillText(`BAKIYE: ₺${currentPlayer.coins}`, 20, CANVAS_HEIGHT - 20);
+              if(!UserArr[i].isDead){
+                ctx.drawImage(
+                  images.users[UserArr[i].type], 
+                  UserArr[i].x - TILE_WIDTH/2, UserArr[i].y - TILE_HEIGHT/2
+                );
+                // Render player name
+                ctx.font = '18px comic sans';
+                ctx.fillStyle = 'black';
+                ctx.textAlign = "center";
+                ctx.fillText(UserArr[i].name, UserArr[i].x, UserArr[i].y - 20);
+                //
+                // Render health bar
+                ctx.fillStyle = 'black';
+                ctx.fillRect((UserArr[i].x + 16) - TILE_WIDTH/2, UserArr[i].y + 20, 32, 12)
+                ctx.fillStyle = 'lightgreen';
+                ctx.fillRect((UserArr[i].x + 16 + 2) - TILE_WIDTH/2, UserArr[i].y + 22, 28 * (UserArr[i].health / 100), 8)
+                //
+                // Render money and medkit counts
+                ctx.font = '14px arial';
+                ctx.fillStyle = 'white';
+                ctx.textAlign = "left";
+                ctx.fillText(`BAKIYE: ₺${currentPlayer.coins}`, 20, CANVAS_HEIGHT - 20);
+                ctx.fillText(`MEDKIT: ${currentPlayer.medkits}`, 130, CANVAS_HEIGHT - 20);
+
+                if(!isGameRunning){
+                  ctx.font = '40px arial';
+                  ctx.fillStyle = 'white';
+                  ctx.textAlign = "center";
+                  const remainingPeople = 3 - UserArr.length;
+                  ctx.fillText(`GAME START WITH ${remainingPeople} PEOPLE`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+                }
+              }
             }
             for(var i = 0; i < CoinArr.length; i++){
               ctx.drawImage(
@@ -95,12 +138,15 @@ $(() => {
                 CoinArr[i].x - TILE_WIDTH/2, CoinArr[i].y - TILE_HEIGHT/2
               );
             }
+            updateCircle();
           });
         }
         let UserArr = [];
         let CoinArr = [];
         setInterval(() => {
-          updateUser(UserArr, CoinArr);
+          if(!isGameOver){
+            updateUsers(UserArr, CoinArr);
+          }
         }, 1000/60);
         drawMap();
         const onKeyDown = (event) => {
@@ -120,6 +166,14 @@ $(() => {
           // DOWN
           else if (keyCode === 83 || keyCode === 40) {
             socket.emit('PLAYER_DIR_UPDATE', {diry: 1});
+          }
+          // M
+          if (keyCode == 77) {
+            socket.emit('PURCHASE_MATERIAL', {type: 'medkit'});
+          }
+          // N
+          if (keyCode == 78) {
+            socket.emit('USE_MATERIAL', {type: 'medkit'});
           }
         }
         const onKeyUp = (event) => {
@@ -148,8 +202,10 @@ $(() => {
               targety: PlayerArr[i].firstY,
               coins: PlayerArr[i].coins,
               type: PlayerArr[i].type,
-              id: PlayerArr[i].id,
-              medkits: PlayerArr[i].medkits
+              medkits: PlayerArr[i].medkits,
+              health: PlayerArr[i].health,
+              isDead: PlayerArr[i].isDead,
+              id: PlayerArr[i].id
             }
             UserArr.push(Player);
           }
@@ -164,6 +220,16 @@ $(() => {
             }
             CoinArr.push(Coin);
           }
+        });
+        socket.on('WINNER_NAME', (data) => {
+          updateUsers(UserArr, CoinArr);
+          setTimeout(() => {
+            isGameOver = true;
+            ctx.font = '40px arial';
+            ctx.fillStyle = 'white';
+            ctx.textAlign = "center";
+            ctx.fillText(`WINNER: ${data.name}`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+          });
         });
       }
     });
