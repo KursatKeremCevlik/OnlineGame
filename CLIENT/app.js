@@ -127,7 +127,7 @@ $(() => {
                   ctx.font = '40px arial';
                   ctx.fillStyle = 'white';
                   ctx.textAlign = "center";
-                  const remainingPeople = 3 - UserArr.length;
+                  const remainingPeople = 2 - UserArr.length;
                   ctx.fillText(`GAME START WITH ${remainingPeople} PEOPLE`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
                 }
               }

@@ -111,7 +111,7 @@ let coinTime = Date.now();
 let circleTime = Date.now();
 let counter = true;
 setInterval(() => {
-  if(PlayerArr.length == 3 && counter){
+  if(PlayerArr.length == 2 && counter){
     isGameRunning = true;
     counter = false;
   }
