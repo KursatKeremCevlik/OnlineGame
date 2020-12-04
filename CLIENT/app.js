@@ -83,7 +83,7 @@ $(() => {
               ctx.font = '18px comic sans';
               ctx.fillStyle = 'black';
               ctx.textAlign = "center";
-              ctx.fillText(currentPlayer.name, currentPlayer.x, currentPlayer.y - 20);
+              ctx.fillText(UserArr[i].name, UserArr[i].x, UserArr[i].y - 20);
               ctx.font = '14px arial';
               ctx.fillStyle = 'white';
               ctx.textAlign = "left";
