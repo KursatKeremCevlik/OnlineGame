@@ -137,7 +137,7 @@ let circleTime = Date.now();
 let bulletTime = Date.now();
 let counter = true;
 setInterval(() => {
-  if(PlayerArr.length == 2 && counter){
+  if(PlayerArr.length == 4 && counter){
     isGameRunning = true;
     counter = false;
   }
