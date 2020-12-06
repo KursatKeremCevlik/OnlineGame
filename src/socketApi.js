@@ -5,8 +5,11 @@ const socketApi = { };
 socketApi.io = io;
 
 let isGameRunning = false;
+
 const PlayerArr = [];
+let bulletArr = [];
 let coinArr = [];
+
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 448;
 const map = [
@@ -61,6 +64,7 @@ io.on('connection', (socket) => {
       type: Math.floor(Math.random() * 4),
       coins: 0,
       medkits: 0,
+      bullets: 0,
       health: 100,
       isDead: false,
       id: socket.id
@@ -92,6 +96,12 @@ io.on('connection', (socket) => {
         player[0].coins -= 100;
       }
     }
+    if(data.type === 'bullet'){
+      if(player[0].coins >= 50){
+        player[0].bullets += 1;
+        player[0].coins -= 50;
+      }
+    }
   });
   socket.on('USE_MATERIAL', (data) => {
     const player = PlayerArr.filter(Player => Player.id === socket.id);
@@ -105,13 +115,29 @@ io.on('connection', (socket) => {
         }
       }
     }
+    if(data.type === 'bullet'){
+      // if(player[0].bullets){
+        player[0].bullets -= 1;
+        const bullet = {
+          startX: data.startX,
+          startY: data.startY,
+          targetX: data.targetX,
+          targetY: data.targetY,
+          x: data.startX,
+          y: data.startY,
+          circleDistance: 10
+        }
+        bulletArr.push(bullet);
+      // }
+    }
   });
 });
 let coinTime = Date.now();
 let circleTime = Date.now();
+let bulletTime = Date.now();
 let counter = true;
 setInterval(() => {
-  if(PlayerArr.length == 2 && counter){
+  if(PlayerArr.length == 4 && counter){
     isGameRunning = true;
     counter = false;
   }
@@ -120,6 +146,7 @@ setInterval(() => {
     counter = true;
     circleClosingDistance = 320;
     coinArr = [];
+    bulletArr = [];
   }
   if(isGameRunning){
     io.sockets.emit('GAME_STATE', {isGameRunning});
@@ -169,9 +196,14 @@ setInterval(() => {
         }
       }
     }
+    for(var i = 0; i < bulletArr.length; i++){
+      bulletArr[i].x -= 1;
+      bulletArr[i].y -= 1;
+    }
   }
   io.sockets.emit('PLAYERS_UPDATE', PlayerArr);
   io.sockets.emit('COINS_UPDATE', coinArr);
+  io.sockets.emit('BULLETS_UPDATE', bulletArr);
   io.sockets.emit('CIRCLE_UPDATE', {circleCenterX, circleCenterY, circleClosingDistance});
 }, 1000/30);
 

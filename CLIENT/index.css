@@ -1,7 +1,6 @@
 body{
     background-color: black;
 }.canvas-home{
-    height: 97vh;
     display: none;
     align-items: center;
     justify-content: center;
