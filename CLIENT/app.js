@@ -61,6 +61,7 @@ $(() => {
         let mouseX;
         let mouseY;
         let currentPlayer;
+        let totalUserCount = 4;
     
         let mainMap;
         /*ctx.drawImage(images.tiles[1], 0, 0, TILE_WIDTH, TILE_HEIGHT,
@@ -124,6 +125,7 @@ $(() => {
                 //
                 
                 // Render line
+                /*
                 let lineX = (mouseX-currentPlayer.x)-startMouseX;
                 let lineY = (mouseY-currentPlayer.y)-startMouseY;
                 const lineHeight = Math.floor(Math.sqrt((lineX*lineX)+(lineY*lineY)))
@@ -140,6 +142,7 @@ $(() => {
                   ctx.lineTo(currentPlayer.x+lineX, currentPlayer.y+lineY);
                   ctx.stroke();
                 }
+                */
                 // Render hepler lines
                 // ctx.moveTo(currentPlayer.x, currentPlayer.y);
                 // ctx.lineTo(currentPlayer.x + lineX, currentPlayer.y);
@@ -164,7 +167,7 @@ $(() => {
                   ctx.font = '40px arial';
                   ctx.fillStyle = 'white';
                   ctx.textAlign = "center";
-                  const remainingPeople = 4 - UserArr.length;
+                  const remainingPeople = totalUserCount - UserArr.length;
                   ctx.fillText(`GAME START WITH ${remainingPeople} PEOPLE`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
                 }
               }
