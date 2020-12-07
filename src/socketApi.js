@@ -137,7 +137,7 @@ let circleTime = Date.now();
 let bulletTime = Date.now();
 let counter = true;
 setInterval(() => {
-  if(PlayerArr.length == 4 && counter){
+  if(PlayerArr.length == 3 && counter){
     isGameRunning = true;
     counter = false;
   }
@@ -172,7 +172,7 @@ setInterval(() => {
       circleClosingDistance = Math.max(0, circleClosingDistance - 1);
       circleTime = Date.now();
     }
-    for(var i = 0; i < PlayerArr.length; i++){
+   for(var i = 0; i < PlayerArr.length; i++){
       const targetx = PlayerArr[i].targetx + PlayerArr[i].dirx * 6;
       const targety = PlayerArr[i].targety + PlayerArr[i].diry * 6;
       if(!PlayerArr[i].isDead){
