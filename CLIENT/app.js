@@ -154,22 +154,22 @@ $(() => {
                 //
                 
                 // Render line
-                let lineX = (mouseX-currentPlayer.x)-startMouseX;
-                let lineY = (mouseY-currentPlayer.y)-startMouseY;
-                const lineHeight = Math.floor(Math.sqrt((lineX*lineX)+(lineY*lineY)))
-                let currentLineX;
-                let currentLineY;
-                if(lineHeight > 100){
-                  currentLineX = lineX/(lineHeight/100);
-                  currentLineY = lineY/(lineHeight/100);
-                  ctx.moveTo(currentPlayer.x, currentPlayer.y);
-                  ctx.lineTo(currentPlayer.x+currentLineX, currentPlayer.y+currentLineY);
-                  ctx.stroke();
-                }else{
-                  ctx.moveTo(currentPlayer.x, currentPlayer.y);
-                  ctx.lineTo(currentPlayer.x+lineX, currentPlayer.y+lineY);
-                  ctx.stroke();
-                }
+                // let lineX = (mouseX-currentPlayer.x)-startMouseX;
+                // let lineY = (mouseY-currentPlayer.y)-startMouseY;
+                // const lineHeight = Math.floor(Math.sqrt((lineX*lineX)+(lineY*lineY)))
+                // let currentLineX;
+                // let currentLineY;
+                // if(lineHeight > 100){
+                //   currentLineX = lineX/(lineHeight/100);
+                //   currentLineY = lineY/(lineHeight/100);
+                //   ctx.moveTo(currentPlayer.x, currentPlayer.y);
+                //   ctx.lineTo(currentPlayer.x+currentLineX, currentPlayer.y+currentLineY);
+                //   ctx.stroke();
+                // }else{
+                //   ctx.moveTo(currentPlayer.x, currentPlayer.y);
+                //   ctx.lineTo(currentPlayer.x+lineX, currentPlayer.y+lineY);
+                //   ctx.stroke();
+                // }
                 // Render hepler lines
                 // ctx.moveTo(currentPlayer.x, currentPlayer.y);
                 // ctx.lineTo(currentPlayer.x + lineX, currentPlayer.y);
