@@ -13,15 +13,19 @@ let coinArr = [];
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 448;
 const map = [
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
-let lastCircleCollapsedAt = Date.now();
 let circleClosingDistance = 320;
 let circleCenterX = CANVAS_WIDTH/2;
 let circleCenterY = CANVAS_HEIGHT/2;
@@ -137,7 +141,7 @@ let circleTime = Date.now();
 let bulletTime = Date.now();
 let counter = true;
 setInterval(() => {
-  if(PlayerArr.length == 3 && counter){
+  if(PlayerArr.length == 1 && counter){
     isGameRunning = true;
     counter = false;
   }
@@ -154,6 +158,7 @@ setInterval(() => {
     for(var i = 0; i < PlayerArr.length; i++){
       if(!PlayerArr[i].isDead){newArr.push(PlayerArr[i])}
     }
+    /*
     if(newArr.length < 2){
       isGameRunning = false;
       const player = newArr[0];
@@ -172,6 +177,7 @@ setInterval(() => {
       circleClosingDistance = Math.max(0, circleClosingDistance - 1);
       circleTime = Date.now();
     }
+    */
    for(var i = 0; i < PlayerArr.length; i++){
       const targetx = PlayerArr[i].targetx + PlayerArr[i].dirx * 6;
       const targety = PlayerArr[i].targety + PlayerArr[i].diry * 6;
@@ -179,11 +185,11 @@ setInterval(() => {
         if(PlayerArr[i].health < 1){
           PlayerArr[i].isDead = true;
         }
-        if(calculateDistance(PlayerArr[i].x, circleCenterX, PlayerArr[i].y, circleCenterY) > circleClosingDistance){
-          PlayerArr[i].health -= 0.2;
-        }
+        // if(calculateDistance(PlayerArr[i].x, circleCenterX, PlayerArr[i].y, circleCenterY) > circleClosingDistance){
+        //   PlayerArr[i].health -= 0.2;
+        // }
       }
-      if(isSolidTile(targetx, targety) && !PlayerArr[i].isDead){
+      // if(isSolidTile(targetx, targety) && !PlayerArr[i].isDead){
         PlayerArr[i].x = PlayerArr[i].x + (targetx - PlayerArr[i].x) * 1.2;
         PlayerArr[i].y = PlayerArr[i].y + (targety - PlayerArr[i].y) * 1.2;
         PlayerArr[i].targetx = PlayerArr[i].x;
@@ -194,7 +200,7 @@ setInterval(() => {
             coinArr.splice(j, 1);
           }
         }
-      }
+      // }
     }
     for(var i = 0; i < bulletArr.length; i++){
       bulletArr[i].x -= 1;
@@ -204,7 +210,7 @@ setInterval(() => {
   io.sockets.emit('PLAYERS_UPDATE', PlayerArr);
   io.sockets.emit('COINS_UPDATE', coinArr);
   io.sockets.emit('BULLETS_UPDATE', bulletArr);
-  io.sockets.emit('CIRCLE_UPDATE', {circleCenterX, circleCenterY, circleClosingDistance});
+  // io.sockets.emit('CIRCLE_UPDATE', {circleCenterX, circleCenterY, circleClosingDistance});
 }, 1000/30);
 
 module.exports = socketApi;

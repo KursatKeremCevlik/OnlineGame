@@ -78,34 +78,36 @@ $(() => {
         });
         const drawMap = (currentPlayer) => {
           if(mainMap){
-            // const cameraCornerX = currentPlayer.x - CANVAS_WIDTH / 2;
-            // const cameraCornerY = currentPlayer.y - CANVAS_HEIGHT / 2;
-            // const offsetX = currentPlayer.x % TILE_WIDTH;
-            // const offsetY = currentPlayer.y % TILE_HEIGHT;
-            // const startTileX = Math.floor(cameraCornerX / TILE_WIDTH) - 1;
-            // const startTileY = Math.floor(cameraCornerY / TILE_HEIGHT) - 1;
+            /*
+            const cameraCornerX = currentPlayer.x - CANVAS_WIDTH / 2;
+            const cameraCornerY = currentPlayer.y - CANVAS_HEIGHT / 2;
+            const offsetX = currentPlayer.x % TILE_WIDTH;
+            const offsetY = currentPlayer.y % TILE_HEIGHT;
+            const startTileX = Math.floor(cameraCornerX / TILE_WIDTH) - 1;
+            const startTileY = Math.floor(cameraCornerY / TILE_HEIGHT) - 1;
             
-            // const cols = CANVAS_WIDTH / TILE_WIDTH + 2;
-            // const rows = CANVAS_HEIGHT / TILE_HEIGHT + 2;
-            // for(var j = 0; j < rows; j++){
-            //   for(var k = 0; k < cols; k++){
-            //     let imageType;
-            //     try{
-            //       imageType = startTileX + k >= 0 && startTileY + j >= 0 ? mainMap[startTileY + j][startTileX + k] : undefined
-            //     } catch(err) {}
-            //     if(imageType == undefined){
-            //       ctx.fillStyle = 'black';
-            //       ctx.fillRect(k * TILE_WIDTH, j * TILE_HEIGHT,
-            //       TILE_WIDTH, TILE_HEIGHT);
-            //     }else{
-            //       ctx.drawImage(
-            //         images.tiles[imageType], 0, 0, TILE_WIDTH, TILE_HEIGHT,
-            //         k * TILE_WIDTH - offsetX, j * TILE_HEIGHT - offsetY,
-            //         TILE_WIDTH, TILE_HEIGHT
-            //       );
-            //     }
-            //   }
-            // }
+            const cols = CANVAS_WIDTH / TILE_WIDTH +3;
+            const rows = CANVAS_HEIGHT / TILE_HEIGHT +3;
+            for(var j = 0; j < rows; j++){
+              for(var k = 0; k < cols; k++){
+                let imageType;
+                try{
+                  imageType = startTileX + k >= 0 && startTileY + j >= 0 ? mainMap[startTileY + j][startTileX + k] : undefined
+                } catch(err) {}
+                if(imageType == undefined){
+                  ctx.fillStyle = 'black';
+                  ctx.fillRect(k * TILE_WIDTH, j * TILE_HEIGHT,
+                  TILE_WIDTH, TILE_HEIGHT);
+                }else{
+                  ctx.drawImage(
+                    images.tiles[imageType], 0, 0, TILE_WIDTH, TILE_HEIGHT,
+                    k * TILE_WIDTH - offsetX, j * TILE_HEIGHT - offsetY,
+                    TILE_WIDTH, TILE_HEIGHT
+                  );
+                }
+              }
+            }
+            */
             for(var i = 0; i < mainMap.length; i++){
               for(var j = 0; j < mainMap[i].length; j++){
                 ctx.drawImage(
@@ -114,6 +116,19 @@ $(() => {
                 );
               }
             }
+            // const cameraCornerX = currentPlayer.x - CANVAS_WIDTH/2;
+            // const cameraCornerY = currentPlayer.y - CANVAS_HEIGHT/2;
+            // const startTileX = Math.floor(cameraCornerX/TILE_WIDTH);
+            // const startTileY = Math.floor(cameraCornerY/TILE_HEIGHT);
+            // const cols = CANVAS_WIDTH / TILE_WIDTH;
+            // const rows = CANVAS_HEIGHT / TILE_HEIGHT;
+            // for(var i = 0; i < rows; i++){
+            //   for(var j = 0; j < cols; j++){
+            //     let imageType = mainMap[i][j];
+            //     ctx.drawImage(images.tiles[imageType],
+            //     j * TILE_WIDTH, i * TILE_HEIGHT);
+            //   }
+            // }
           }
         }
         const updateCircle = () => {
@@ -145,12 +160,15 @@ $(() => {
                 ctx.fillStyle = 'black';
                 ctx.textAlign = "center";
                 ctx.fillText(UserArr[i].name, UserArr[i].x, UserArr[i].y - 20);
+                // ctx.fillText(UserArr[i].name, CANVAS_WIDTH/2 + TILE_WIDTH/2, CANVAS_HEIGHT/2 + 10);
                 //
                 // Render health bar
+                /*
                 ctx.fillStyle = 'black';
                 ctx.fillRect((UserArr[i].x + 16) - TILE_WIDTH/2, UserArr[i].y + 20, 32, 12)
                 ctx.fillStyle = 'lightgreen';
                 ctx.fillRect((UserArr[i].x + 16 + 2) - TILE_WIDTH/2, UserArr[i].y + 22, 28 * (UserArr[i].health / 100), 8)
+                */
                 //
                 
                 // Render line
@@ -240,7 +258,9 @@ $(() => {
         let BulletArr = [];
         setInterval(() => {
           if(!isGameOver){
-            updateUsers(UserArr, CoinArr, BulletArr);
+            requestAnimationFrame(() => {
+              updateUsers(UserArr, CoinArr, BulletArr);
+            });
           }
         }, 1000/60);
         drawMap();
