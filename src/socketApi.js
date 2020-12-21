@@ -163,19 +163,17 @@ io.on('connection', (socket) => {
   });
 });
 let coinTime = Date.now();
-let circleTime = Date.now();
 let bulletTime = Date.now();
 let windMillTime = Date.now();
 let counter = true;
 setInterval(() => {
-  if(PlayerArr.length == 1 && counter){
+  if(PlayerArr.length == shouldPeopleCount && counter){
     isGameRunning = true;
     counter = false;
   }
   if(PlayerArr.length == 0){
     isGameRunning = false;
     counter = true;
-    circleClosingDistance = 320;
     coinArr = [];
     bulletArr = [];
   }
@@ -232,9 +230,6 @@ setInterval(() => {
         if(PlayerArr[i].health < 1){
           PlayerArr[i].isDead = true;
         }
-        // if(calculateDistance(PlayerArr[i].x, circleCenterX, PlayerArr[i].y, circleCenterY) > circleClosingDistance){
-        //   PlayerArr[i].health -= 0.2;
-        // }
       }
       if(isSolidTile(targetx, targety) && !PlayerArr[i].isDead){
         PlayerArr[i].x = PlayerArr[i].x + (targetx - PlayerArr[i].x) * 1.2;
