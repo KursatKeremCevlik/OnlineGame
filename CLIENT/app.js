@@ -6,8 +6,8 @@ $(() => {
         // Open game
         $('.name-area').hide();
         // Canvas settings
-        const CANVAS_WIDTH = 640;
-        const CANVAS_HEIGHT = 448;
+        const CANVAS_WIDTH = 704;
+        const CANVAS_HEIGHT = 512;
         
         const element = document.getElementById('canvas-home');
         element.style.display = 'flex';
@@ -28,15 +28,54 @@ $(() => {
         const ctx = canvas.getContext('2d');
         const tile0 = document.getElementById('tile0');
         const tile1 = document.getElementById('tile1');
+        const tile2 = document.getElementById('tile2');
+        const tile3 = document.getElementById('tile3');
+        const tile4 = document.getElementById('tile4');
+        const tile5 = document.getElementById('tile5');
+        const windMillTile0 = document.getElementById('windMillTile0');
+        const windMillTile1 = document.getElementById('windMillTile1');
+        const windMillTile2 = document.getElementById('windMillTile2');
+        const windMillTile3 = document.getElementById('windMillTile3');
+        const windMillTile4 = document.getElementById('windMillTile4');
+        const waysTile0 = document.getElementById('waysTile0');
+        const waysTile1 = document.getElementById('waysTile1');
+        const waysTile2 = document.getElementById('waysTile2');
+        const waysTile3 = document.getElementById('waysTile3');
+        const waysTile4 = document.getElementById('waysTile4');
+        const waysTile5 = document.getElementById('waysTile5');
+        const waysTile6 = document.getElementById('waysTile6');
+        const waysTile7 = document.getElementById('waysTile7');
+        const waysTile8 = document.getElementById('waysTile8');
+        const waysTile9 = document.getElementById('waysTile9');
         const chrc0 = document.getElementById('chrc0');
         const chrc1 = document.getElementById('chrc1');
         const chrc2 = document.getElementById('chrc2');
         const chrc3 = document.getElementById('chrc3');
         const Coin = document.getElementById('coin');
+        const bullet = document.getElementById('bullet');
         const images = {
           tiles: {
             0: tile0,
             1: tile1,
+            2: tile2,
+            3: tile3,
+            4: tile4,
+            5: tile5,
+            6: windMillTile0,
+            7: windMillTile1,
+            8: windMillTile2,
+            9: windMillTile3,
+            10: windMillTile4,
+            11: waysTile0,
+            12: waysTile1,
+            13: waysTile2,
+            14: waysTile3,
+            15: waysTile4,
+            16: waysTile5,
+            17: waysTile6,
+            18: waysTile7,
+            19: waysTile8,
+            20: waysTile9,
           },
           users: {
             0: chrc0,
@@ -45,8 +84,9 @@ $(() => {
             3: chrc3
           },
           environments: {
-            0: Coin
-          }
+            0: Coin,
+            1: bullet
+          },
         }
 
         let circleCenterX;
@@ -61,13 +101,21 @@ $(() => {
         let mouseX;
         let mouseY;
         let currentPlayer;
-        let totalUserCount = 4;
+        let totalUserCount = 0;
     
         let mainMap;
         /*ctx.drawImage(images.tiles[1], 0, 0, TILE_WIDTH, TILE_HEIGHT,
         0, 0,
         TILE_WIDTH, TILE_HEIGHT); */
         socket.on('MAP_UPDATE', (map) => {mainMap = map});
+        socket.on('SHOULD_PEOPLE_COUNT', (shouldPeopleCount) => {
+          totalUserCount = shouldPeopleCount;
+          ctx.font = '40px arial';
+          ctx.fillStyle = 'white';
+          ctx.textAlign = "center";
+          const remainingPeople = totalUserCount - UserArr.length;
+          ctx.fillText(`GAME START WITH ${remainingPeople} PEOPLE`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+        });
         socket.on('GAME_STATE', (data) => {
           isGameRunning = data.isGameRunning;
         });
@@ -80,10 +128,55 @@ $(() => {
           if(mainMap){
             for(var i = 0; i < mainMap.length; i++){
               for(var j = 0; j < mainMap[i].length; j++){
-                ctx.drawImage(
-                  images.tiles[mainMap[i][j]],
-                  j*64, i*64
-                );
+                if(mainMap[i][j] == 3){
+                  // Draw castle here
+                  ctx.drawImage(
+                    images.tiles[0],
+                    j*TILE_WIDTH, i*TILE_HEIGHT
+                  );
+                  ctx.drawImage(
+                    images.tiles[3],
+                    j*TILE_WIDTH, (i*TILE_HEIGHT) - 32
+                  );
+                  ctx.drawImage(
+                    images.tiles[4],
+                    j*TILE_WIDTH, (i*TILE_HEIGHT) + 30
+                  );
+                }else if(mainMap[i][j]==6 || mainMap[i][j]==7 || mainMap[i][j]==8){
+                  // Draw windmill here
+                  ctx.drawImage(
+                    images.tiles[0],
+                    j*TILE_WIDTH, i*TILE_HEIGHT
+                  );
+                  ctx.drawImage(
+                    images.tiles[9],
+                    j*TILE_WIDTH, i*TILE_HEIGHT - 32
+                  );
+                  ctx.drawImage(
+                    images.tiles[10],
+                    j*TILE_WIDTH, i*TILE_HEIGHT + 30
+                  );
+                  ctx.drawImage(
+                    images.tiles[mainMap[i][j]],
+                    j*TILE_WIDTH, i*TILE_HEIGHT - 10
+                  );
+                }else if(mainMap[i][j] !== 0 && mainMap[i][j] !== 1){
+                  // Draw environments here
+                  ctx.drawImage(
+                    images.tiles[0],
+                    j*TILE_WIDTH, i*TILE_HEIGHT
+                  );
+                  ctx.drawImage(
+                    images.tiles[mainMap[i][j]],
+                    j*TILE_WIDTH, i*TILE_HEIGHT
+                  );
+                }else{
+                  // Draw floor here
+                  ctx.drawImage(
+                    images.tiles[mainMap[i][j]],
+                    j*TILE_WIDTH, i*TILE_HEIGHT
+                  );
+                }
               }
             }
           }
@@ -125,7 +218,6 @@ $(() => {
                 //
                 
                 // Render line
-                /*
                 let lineX = (mouseX-currentPlayer.x)-startMouseX;
                 let lineY = (mouseY-currentPlayer.y)-startMouseY;
                 const lineHeight = Math.floor(Math.sqrt((lineX*lineX)+(lineY*lineY)))
@@ -142,7 +234,6 @@ $(() => {
                   ctx.lineTo(currentPlayer.x+lineX, currentPlayer.y+lineY);
                   ctx.stroke();
                 }
-                */
                 // Render hepler lines
                 // ctx.moveTo(currentPlayer.x, currentPlayer.y);
                 // ctx.lineTo(currentPlayer.x + lineX, currentPlayer.y);
@@ -193,16 +284,59 @@ $(() => {
         const updateBullets = (bulletArr) => {
           if(bulletArr[0]){
             for(var i = 0; i < bulletArr.length; i++){
-              ctx.moveTo(bulletArr[i].startX, bulletArr[i].startY);
-              ctx.lineTo(bulletArr[i].targetX, bulletArr[i].targetY);
+              const X = bulletArr[i].x;
+              const Y = bulletArr[i].y;
+              const startX = bulletArr[i].startX;
+              const startY = bulletArr[i].startY;
+              const targetX = bulletArr[i].targetX;
+              const targetY = bulletArr[i].targetY;
+
+              const lineX = targetX - startX;
+              const lineY = targetY - startY;
+              const lineHeight = Math.floor(Math.sqrt((lineX*lineX)+(lineY*lineY)))
+              let currentLineX;
+              let currentLineY;
+              /*
+              if(lineHeight > 300){
+                currentLineX = lineX/(lineHeight/300);
+                currentLineY = lineY/(lineHeight/300);
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(
+                  startX + currentLineX, 
+                  startY + currentLineY
+                );
+              }else{
+                ctx.moveTo(startX, startY);
+                currentLineX = lineX/(lineHeight/300);
+                currentLineY = lineY/(lineHeight/300);
+                ctx.lineTo(
+                  startX + currentLineX, 
+                  startY + currentLineY
+                );
+              }
+              */
               ctx.stroke();
+
               ctx.beginPath();
               ctx.arc(
-                bulletArr[i].startX, bulletArr[i].startY,
+                X, Y,
                 bulletArr[i].circleDistance,
                 0, 2*Math.PI);
               ctx.fill();
               ctx.stroke();
+              /*
+              ctx.moveTo(startX, startY);
+              ctx.lineTo(targetX, startY);
+              
+              ctx.font = '14px arial';
+              ctx.moveTo(targetX, startY);
+              ctx.lineTo(targetX, targetY);
+              ctx.fillText(Math.floor(lineX), startX+(lineX)/2, startY-5);
+
+              ctx.font = '14px arial';
+              ctx.fillText(Math.floor(lineY), targetX+20, startY + lineY/2);
+              ctx.stroke();
+              */
             }
           }
         }
@@ -260,25 +394,29 @@ $(() => {
         let fireCounter = 0;
         window.addEventListener('keydown', onKeyDown);
         window.addEventListener('keyup', onKeyUp);
-        /*
         window.addEventListener('click', event => {
           if(fireCounter){
-            const data = {
-              type: 'bullet', 
-              startX: currentPlayer.x,
-              startY: currentPlayer.y,
-              targetX: mouseX-startMouseX,
-              targetY: mouseY-startMouseY,
-              x: currentPlayer.x,
-              y: currentPlayer.y
-            }
-            // targetX = data.targetX + (10 * (data.targetX / data.targetY));
-            // targetY = data.targetY + (10 * (data.targetY / data.targetX));
-            socket.emit('USE_MATERIAL', data);
+            let bulletX = currentPlayer.x;
+            let bulletY = currentPlayer.y;
+            const targetX = mouseX-startMouseX;
+            const targetY = mouseY-startMouseY;
+            setTimeout(() => {
+              const data = {
+                type: 'bullet', 
+                startX: bulletX,
+                startY: bulletY,
+                targetX: targetX,
+                targetY: targetY,
+                x: bulletX,
+                y: bulletY
+              }
+              // targetX = data.targetX + (10 * (data.targetX / data.targetY));
+              // targetY = data.targetY + (10 * (data.targetY / data.targetX));
+              socket.emit('USE_MATERIAL', data);
+            });
           }
           fireCounter = 1;
         });
-        */
         window.addEventListener('mousemove', event => {
           if(screenWidth>CANVAS_WIDTH){
             startMouseX = Math.floor((screenWidth-CANVAS_WIDTH)/2);
