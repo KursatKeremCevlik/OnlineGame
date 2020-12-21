@@ -101,7 +101,11 @@ $(() => {
         let mouseX;
         let mouseY;
         let currentPlayer;
+<<<<<<< HEAD
         let totalUserCount = 0;
+=======
+        let totalUserCount = 3;
+>>>>>>> 9b18467deac52f38a35b422082d1e61214d365d1
     
         let mainMap;
         /*ctx.drawImage(images.tiles[1], 0, 0, TILE_WIDTH, TILE_HEIGHT,
@@ -124,8 +128,38 @@ $(() => {
           circleCenterY = data.circleCenterY;
           circleClosingDistance = data.circleClosingDistance;
         });
-        const drawMap = () => {
+        const drawMap = (currentPlayer) => {
           if(mainMap){
+            /*
+            const cameraCornerX = currentPlayer.x - CANVAS_WIDTH / 2;
+            const cameraCornerY = currentPlayer.y - CANVAS_HEIGHT / 2;
+            const offsetX = currentPlayer.x % TILE_WIDTH;
+            const offsetY = currentPlayer.y % TILE_HEIGHT;
+            const startTileX = Math.floor(cameraCornerX / TILE_WIDTH) - 1;
+            const startTileY = Math.floor(cameraCornerY / TILE_HEIGHT) - 1;
+            
+            const cols = CANVAS_WIDTH / TILE_WIDTH +3;
+            const rows = CANVAS_HEIGHT / TILE_HEIGHT +3;
+            for(var j = 0; j < rows; j++){
+              for(var k = 0; k < cols; k++){
+                let imageType;
+                try{
+                  imageType = startTileX + k >= 0 && startTileY + j >= 0 ? mainMap[startTileY + j][startTileX + k] : undefined
+                } catch(err) {}
+                if(imageType == undefined){
+                  ctx.fillStyle = 'black';
+                  ctx.fillRect(k * TILE_WIDTH, j * TILE_HEIGHT,
+                  TILE_WIDTH, TILE_HEIGHT);
+                }else{
+                  ctx.drawImage(
+                    images.tiles[imageType], 0, 0, TILE_WIDTH, TILE_HEIGHT,
+                    k * TILE_WIDTH - offsetX, j * TILE_HEIGHT - offsetY,
+                    TILE_WIDTH, TILE_HEIGHT
+                  );
+                }
+              }
+            }
+            */
             for(var i = 0; i < mainMap.length; i++){
               for(var j = 0; j < mainMap[i].length; j++){
                 if(mainMap[i][j] == 3){
@@ -179,6 +213,19 @@ $(() => {
                 }
               }
             }
+            // const cameraCornerX = currentPlayer.x - CANVAS_WIDTH/2;
+            // const cameraCornerY = currentPlayer.y - CANVAS_HEIGHT/2;
+            // const startTileX = Math.floor(cameraCornerX/TILE_WIDTH);
+            // const startTileY = Math.floor(cameraCornerY/TILE_HEIGHT);
+            // const cols = CANVAS_WIDTH / TILE_WIDTH;
+            // const rows = CANVAS_HEIGHT / TILE_HEIGHT;
+            // for(var i = 0; i < rows; i++){
+            //   for(var j = 0; j < cols; j++){
+            //     let imageType = mainMap[i][j];
+            //     ctx.drawImage(images.tiles[imageType],
+            //     j * TILE_WIDTH, i * TILE_HEIGHT);
+            //   }
+            // }
           }
         }
         const updateCircle = () => {
@@ -197,27 +244,32 @@ $(() => {
           }
           setTimeout(() => {
             ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            drawMap();
+            drawMap(currentPlayer);
             for(var i = 0; i < UserArr.length; i++){
               if(!UserArr[i].isDead){
                 ctx.drawImage(
-                  images.users[UserArr[i].type], 
+                  images.users[UserArr[i].type],
+                  // CANVAS_WIDTH/2, CANVAS_HEIGHT/2
                   UserArr[i].x - TILE_WIDTH/2, UserArr[i].y - TILE_HEIGHT/2
-                  );
+                );
                 // Render player name
                 ctx.font = '18px comic sans';
                 ctx.fillStyle = 'black';
                 ctx.textAlign = "center";
                 ctx.fillText(UserArr[i].name, UserArr[i].x, UserArr[i].y - 20);
+                // ctx.fillText(UserArr[i].name, CANVAS_WIDTH/2 + TILE_WIDTH/2, CANVAS_HEIGHT/2 + 10);
                 //
                 // Render health bar
+                /*
                 ctx.fillStyle = 'black';
                 ctx.fillRect((UserArr[i].x + 16) - TILE_WIDTH/2, UserArr[i].y + 20, 32, 12)
                 ctx.fillStyle = 'lightgreen';
                 ctx.fillRect((UserArr[i].x + 16 + 2) - TILE_WIDTH/2, UserArr[i].y + 22, 28 * (UserArr[i].health / 100), 8)
+                */
                 //
                 
                 // Render line
+<<<<<<< HEAD
                 let lineX = (mouseX-currentPlayer.x)-startMouseX;
                 let lineY = (mouseY-currentPlayer.y)-startMouseY;
                 const lineHeight = Math.floor(Math.sqrt((lineX*lineX)+(lineY*lineY)))
@@ -234,6 +286,24 @@ $(() => {
                   ctx.lineTo(currentPlayer.x+lineX, currentPlayer.y+lineY);
                   ctx.stroke();
                 }
+=======
+                // let lineX = (mouseX-currentPlayer.x)-startMouseX;
+                // let lineY = (mouseY-currentPlayer.y)-startMouseY;
+                // const lineHeight = Math.floor(Math.sqrt((lineX*lineX)+(lineY*lineY)))
+                // let currentLineX;
+                // let currentLineY;
+                // if(lineHeight > 100){
+                //   currentLineX = lineX/(lineHeight/100);
+                //   currentLineY = lineY/(lineHeight/100);
+                //   ctx.moveTo(currentPlayer.x, currentPlayer.y);
+                //   ctx.lineTo(currentPlayer.x+currentLineX, currentPlayer.y+currentLineY);
+                //   ctx.stroke();
+                // }else{
+                //   ctx.moveTo(currentPlayer.x, currentPlayer.y);
+                //   ctx.lineTo(currentPlayer.x+lineX, currentPlayer.y+lineY);
+                //   ctx.stroke();
+                // }
+>>>>>>> 9b18467deac52f38a35b422082d1e61214d365d1
                 // Render hepler lines
                 // ctx.moveTo(currentPlayer.x, currentPlayer.y);
                 // ctx.lineTo(currentPlayer.x + lineX, currentPlayer.y);
@@ -262,6 +332,7 @@ $(() => {
                   ctx.fillText(`GAME START WITH ${remainingPeople} PEOPLE`, CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
                 }
               }
+              /*
               ctx.drawImage(
                 images.users[UserArr[i].type], 
                 UserArr[i].x - TILE_WIDTH/2, UserArr[i].y - TILE_HEIGHT/2
@@ -270,6 +341,7 @@ $(() => {
               ctx.fillStyle = 'black';
               ctx.textAlign = "center";
               ctx.fillText(UserArr[i].name, UserArr[i].x, UserArr[i].y - 20);
+              */
             }
             for(var i = 0; i < CoinArr.length; i++){
               ctx.drawImage(
@@ -345,7 +417,9 @@ $(() => {
         let BulletArr = [];
         setInterval(() => {
           if(!isGameOver){
-            updateUsers(UserArr, CoinArr, BulletArr);
+            requestAnimationFrame(() => {
+              updateUsers(UserArr, CoinArr, BulletArr);
+            });
           }
         }, 1000/60);
         drawMap();
@@ -394,6 +468,7 @@ $(() => {
         let fireCounter = 0;
         window.addEventListener('keydown', onKeyDown);
         window.addEventListener('keyup', onKeyUp);
+<<<<<<< HEAD
         window.addEventListener('click', event => {
           if(fireCounter){
             let bulletX = currentPlayer.x;
@@ -417,6 +492,25 @@ $(() => {
           }
           fireCounter = 1;
         });
+=======
+        // window.addEventListener('click', event => {
+        //   if(fireCounter){
+        //     const data = {
+        //       type: 'bullet', 
+        //       startX: currentPlayer.x,
+        //       startY: currentPlayer.y,
+        //       targetX: mouseX-startMouseX,
+        //       targetY: mouseY-startMouseY,
+        //       x: currentPlayer.x,
+        //       y: currentPlayer.y
+        //     }
+        //     // targetX = data.targetX + (10 * (data.targetX / data.targetY));
+        //     // targetY = data.targetY + (10 * (data.targetY / data.targetX));
+        //     socket.emit('USE_MATERIAL', data);
+        //   }
+        //   fireCounter = 1;
+        // });
+>>>>>>> 9b18467deac52f38a35b422082d1e61214d365d1
         window.addEventListener('mousemove', event => {
           if(screenWidth>CANVAS_WIDTH){
             startMouseX = Math.floor((screenWidth-CANVAS_WIDTH)/2);
