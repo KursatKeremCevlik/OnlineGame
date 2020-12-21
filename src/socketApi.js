@@ -272,7 +272,7 @@ setInterval(() => {
           bulletArr[i].deadTime = Date.now();
         }
       }
-      if(Date.now() - bulletArr[i].deadTime > 500 && bulletArr[i].isDead){
+      if(bulletArr[i].isDead){
         bulletArr.splice(i, 1);
       }
       for(var j = 0; j < PlayerArr.length; j++){
