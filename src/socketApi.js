@@ -29,7 +29,7 @@ let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 const notSolid = [0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
-const shouldPeopleCount = 1;
+const shouldPeopleCount = 2;
 
 const isSolidTile = (x, y) => {
   // x, y => TargetX, TargetY
@@ -183,19 +183,19 @@ setInterval(() => {
     for(var i = 0; i < PlayerArr.length; i++){
       if(!PlayerArr[i].isDead){newArr.push(PlayerArr[i])}
     }
-    // if(newArr.length < 2){
-    //   isGameRunning = false;
-    //   const player = newArr[0];
-    //   io.sockets.emit('PLAYERS_UPDATE', PlayerArr);
-    //   io.sockets.emit('COINS_UPDATE', coinArr);
-    //   setTimeout(() => {
-    //     io.sockets.emit('WINNER_NAME', {name: player.name});
-    //   });
-    // }
-    // if(Date.now() - coinTime > 3500){
-    //   coinTime = Date.now();
-    //   addCoin();
-    // }
+    if(newArr.length < 2){
+      isGameRunning = false;
+      const player = newArr[0];
+      io.sockets.emit('PLAYERS_UPDATE', PlayerArr);
+      io.sockets.emit('COINS_UPDATE', coinArr);
+      setTimeout(() => {
+        io.sockets.emit('WINNER_NAME', {name: player.name});
+      });
+    }
+    if(Date.now() - coinTime > 3500){
+      coinTime = Date.now();
+      addCoin();
+    }
     if(Date.now() - windMillTime > 500){
       let valueArr = [];
       for(var i = 0; i < map.length; i++){
