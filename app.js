@@ -53,6 +53,7 @@ app.use('/chrc2', express.static(path.join(__dirname, '/assets/characters/2.png'
 app.use('/chrc3', express.static(path.join(__dirname, '/assets/characters/3.png')));
 app.use('/coin', express.static(path.join(__dirname, '/assets/environments/coin.png')));
 app.use('/bullet', express.static(path.join(__dirname, '/assets/environments/bullet.png')));
+app.use('/stone', express.static(path.join(__dirname, '/assets/environments/stone.png')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

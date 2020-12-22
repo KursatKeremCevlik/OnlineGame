@@ -53,6 +53,7 @@ $(() => {
         const chrc3 = document.getElementById('chrc3');
         const Coin = document.getElementById('coin');
         const bullet = document.getElementById('bullet');
+        const stone = document.getElementById('stone');
         const images = {
           tiles: {
             0: tile0,
@@ -76,6 +77,7 @@ $(() => {
             18: waysTile7,
             19: waysTile8,
             20: waysTile9,
+            21: stone
           },
           users: {
             0: chrc0,
