@@ -51,7 +51,30 @@ $(() => {
         const chrc1 = document.getElementById('chrc1');
         const chrc2 = document.getElementById('chrc2');
         const chrc3 = document.getElementById('chrc3');
-        const Coin = document.getElementById('coin');
+        const chrc4 = document.getElementById('chrc4');
+        const chrc5 = document.getElementById('chrc5');
+        const chrc6 = document.getElementById('chrc6');
+        const chrc7 = document.getElementById('chrc7');
+        const chrc8 = document.getElementById('chrc8');
+        const chrc9 = document.getElementById('chrc9');
+        const chrc10 = document.getElementById('chrc10');
+        const chrc11 = document.getElementById('chrc11');
+        const chrc12 = document.getElementById('chrc12');
+        const chrc13 = document.getElementById('chrc13');
+        const chrc14 = document.getElementById('chrc14');
+        const chrc15 = document.getElementById('chrc15');
+        const chrc16 = document.getElementById('chrc16');
+        const chrc17 = document.getElementById('chrc17');
+        const chrc18 = document.getElementById('chrc18');
+        const chrc19 = document.getElementById('chrc19');
+        const chrc20 = document.getElementById('chrc20');
+        const chrc21 = document.getElementById('chrc21');
+        const chrc22 = document.getElementById('chrc22');
+        const chrc23 = document.getElementById('chrc23');
+        const coin0 = document.getElementById('coin0');
+        const coin1 = document.getElementById('coin1');
+        const coin2 = document.getElementById('coin2');
+        const coin3 = document.getElementById('coin3');
         const bullet = document.getElementById('bullet');
         const stone = document.getElementById('stone');
         const images = {
@@ -83,12 +106,37 @@ $(() => {
             0: chrc0,
             1: chrc1,
             2: chrc2,
-            3: chrc3
+            3: chrc3,
+            4: chrc4,
+            5: chrc5,
+            6: chrc6,
+            7: chrc7,
+            8: chrc8,
+            9: chrc9,
+            10: chrc10,
+            11: chrc11,
+            12: chrc12,
+            13: chrc13,
+            14: chrc14,
+            15: chrc15,
+            16: chrc16,
+            17: chrc17,
+            18: chrc18,
+            19: chrc19,
+            20: chrc20,
+            21: chrc21,
+            22: chrc22,
+            23: chrc23,
           },
           environments: {
-            0: Coin,
             1: bullet
           },
+          coins: {
+            0: coin0,
+            1: coin1,
+            2: coin2,
+            3: coin3
+          }
         }
 
         let circleCenterX;
@@ -297,7 +345,7 @@ $(() => {
             }
             for(var i = 0; i < CoinArr.length; i++){
               ctx.drawImage(
-                images.environments[CoinArr[i].type],
+                images.coins[CoinArr[i].type],
                 CoinArr[i].x - TILE_WIDTH/2, CoinArr[i].y - TILE_HEIGHT/2
               );
             }
@@ -368,10 +416,38 @@ $(() => {
         let UserArr = [];
         let CoinArr = [];
         let BulletArr = [];
+        let windMillTime = Date.now();
         setInterval(() => {
           if(!isGameOver){
             requestAnimationFrame(() => {
               updateUsers(UserArr, CoinArr, BulletArr);
+              if(Date.now() - windMillTime > 500){
+                let valueArr = [];
+                for(var i = 0; i < mainMap.length; i++){
+                  for(var j = 0; j < mainMap[i].length; j++){
+                    if(mainMap[i][j] == 6){
+                      valueArr.push({i: i, j: j, value: 7});
+                    }
+                    if(mainMap[i][j] == 7){
+                      valueArr.push({i: i, j: j, value: 8});
+                    }
+                    if(mainMap[i][j] == 8){
+                      valueArr.push({i: i, j: j, value: 6});
+                    }
+                  }
+                }
+                setTimeout(() => {
+                  if(valueArr[0]){
+                    for(var i = 0; i < valueArr.length; i++){
+                      mainMap[valueArr[i].i][valueArr[i].j] = valueArr[i].value;
+                    }
+                  }
+                  setTimeout(() => {
+                    valueArr = [];
+                  });
+                });
+                windMillTime = Date.now();
+              }
             });
           }
         }, 1000/60);

@@ -12,24 +12,31 @@ let coinArr = [];
 
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 448;
-// 0 => grass
-// 1 => tree
-// 2 => home
-// 3 => castle
-// 5 => statue
-// 6 => windmill
+// 0 => grass / çimen
+// 1 => forest / orman
+// 2 => home / ev
+// 3, 4 => castle / kale
+// 5 => statue / heykel
+// 6, 7, 8, 9, 10 => windmill / yel değirmeni
+// 11, 12, 13, 14 => ways / yollar
+// 15 => small tree / küçük ağaç
+// 16, 17 => bush / çalı
+// 18 => small forest
+// 19 => cut trees (small)
+// 20 => cut trees (big)
+// 21 => stone / taş
 let map = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 2, 20, 0, 0, 18, 21, 0, 15, 6, 1],
   [1, 11, 17, 21, 0, 0, 19, 0, 0, 11, 1],
   [1, 14, 12, 12, 12, 3, 12, 12, 12, 13, 1],
-  [1, 11, 0, 0, 17, 0, 0, 0, 15, 11, 1],
+  [1, 11, 21, 0, 17, 0, 0, 0, 15, 11, 1],
   [1, 11, 16, 0, 21, 0, 16, 0, 20, 11, 1],
   [1, 7, 0, 0, 0, 15, 0, 0, 21, 2, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 const notSolid = [0, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
-const shouldPeopleCount = 2;
+const shouldPeopleCount = 1;
 
 const isSolidTile = (x, y) => {
   // x, y => TargetX, TargetY
@@ -43,7 +50,7 @@ const isSolidTile = (x, y) => {
   }
 }
 
-const addCoin = () => {
+const addCoin = (coinType) => {
   let a = true;
   while(a){
     const x = Math.floor(Math.random() * 520) + 100;
@@ -52,7 +59,7 @@ const addCoin = () => {
       const coin = {
         x: x,
         y: y,
-        type: 0
+        type: coinType
       }
       coinArr.push(coin);
       a = false;
@@ -81,7 +88,7 @@ io.on('connection', (socket) => {
           diry: 0,
           targetx: firstX,
           targety: firstY,
-          type: Math.floor(Math.random() * 4),
+          type: Math.floor(Math.random() * 24),
           coins: 0,
           medkits: 0,
           bullets: 0,
@@ -183,6 +190,7 @@ setInterval(() => {
     for(var i = 0; i < PlayerArr.length; i++){
       if(!PlayerArr[i].isDead){newArr.push(PlayerArr[i])}
     }
+    /*
     if(newArr.length < 2){
       isGameRunning = false;
       const player = newArr[0];
@@ -191,37 +199,25 @@ setInterval(() => {
       setTimeout(() => {
         io.sockets.emit('WINNER_NAME', {name: player.name});
       });
-    }
+    }*/
     if(Date.now() - coinTime > 3500){
-      coinTime = Date.now();
-      addCoin();
-    }
-    if(Date.now() - windMillTime > 500){
-      let valueArr = [];
-      for(var i = 0; i < map.length; i++){
-        for(var j = 0; j < map[i].length; j++){
-          if(map[i][j] == 6){
-            valueArr.push({i: i, j: j, value: 7});
-          }
-          if(map[i][j] == 7){
-            valueArr.push({i: i, j: j, value: 8});
-          }
-          if(map[i][j] == 8){
-            valueArr.push({i: i, j: j, value: 6});
-          }
-        }
+      const type = Math.floor(Math.random() * 100);
+      let coinType;
+      if(type < 10){
+        // Large coin
+        coinType = 0;
+      }else if(type >= 10 && type < 30){
+        // Big coin
+        coinType = 1;
+      }else if(type >= 30 && type < 60){
+        // Middle coin
+        coinType = 2;
+      }else if(type >= 60){
+        // Small coin
+        coinType = 3;
       }
-      setTimeout(() => {
-        if(valueArr[0]){
-          for(var i = 0; i < valueArr.length; i++){
-            map[valueArr[i].i][valueArr[i].j] = valueArr[i].value;
-          }
-        }
-        setTimeout(() => {
-          valueArr = [];
-        });
-      });
-      windMillTime = Date.now();
+      coinTime = Date.now();
+      addCoin(coinType);
     }
     for(var i = 0; i < PlayerArr.length; i++){
       const targetx = PlayerArr[i].targetx + PlayerArr[i].dirx * 6;
@@ -238,7 +234,20 @@ setInterval(() => {
         PlayerArr[i].targety = PlayerArr[i].y;
         for(var j = 0; j < coinArr.length; j++){
           if(calculateDistance(PlayerArr[i].x, coinArr[j].x, PlayerArr[i].y, coinArr[j].y) < 20){
-            PlayerArr[i].coins += 200;
+            const coinType = coinArr[j].type;
+            if(coinType == 0){
+              // Large coin
+              PlayerArr[i].coins += 200;
+            }else if(coinType == 1){
+              // Big coin
+              PlayerArr[i].coins += 150;
+            }else if(coinType == 2){
+              // Middle coin
+              PlayerArr[i].coins += 100;
+            }else if(coinType == 3){
+              // Small coin
+              PlayerArr[i].coins += 50;
+            }
             coinArr.splice(j, 1);
           }
         }
@@ -290,7 +299,7 @@ setInterval(() => {
   io.sockets.emit('PLAYERS_UPDATE', PlayerArr);
   io.sockets.emit('COINS_UPDATE', coinArr);
   io.sockets.emit('BULLETS_UPDATE', bulletArr);
-  io.sockets.emit('MAP_UPDATE', map);
+  // io.sockets.emit('MAP_UPDATE', map);
   // io.sockets.emit('CIRCLE_UPDATE', {circleCenterX, circleCenterY, circleClosingDistance});
 }, 1000/30);
 
