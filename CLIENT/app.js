@@ -7,7 +7,7 @@ $(() => {
         $('.name-area').hide();
         // Canvas settings
         const CANVAS_WIDTH = 704;
-        const CANVAS_HEIGHT = 512;
+        const CANVAS_HEIGHT = 576;
         
         const element = document.getElementById('canvas-home');
         element.style.display = 'flex';
@@ -47,6 +47,7 @@ $(() => {
         const waysTile7 = document.getElementById('waysTile7');
         const waysTile8 = document.getElementById('waysTile8');
         const waysTile9 = document.getElementById('waysTile9');
+        const waysTile10 = document.getElementById('waysTile10');
         const chrc0 = document.getElementById('chrc0');
         const chrc1 = document.getElementById('chrc1');
         const chrc2 = document.getElementById('chrc2');
@@ -100,7 +101,8 @@ $(() => {
             18: waysTile7,
             19: waysTile8,
             20: waysTile9,
-            21: stone
+            21: stone,
+            22: waysTile10
           },
           users: {
             0: chrc0,

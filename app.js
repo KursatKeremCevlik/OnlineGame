@@ -47,6 +47,7 @@ app.use('/ways/tile6', express.static(path.join(__dirname, '/assets/tiles/ways/6
 app.use('/ways/tile7', express.static(path.join(__dirname, '/assets/tiles/ways/7.png')));
 app.use('/ways/tile8', express.static(path.join(__dirname, '/assets/tiles/ways/8.png')));
 app.use('/ways/tile9', express.static(path.join(__dirname, '/assets/tiles/ways/9.png')));
+app.use('/ways/tile10', express.static(path.join(__dirname, '/assets/tiles/ways/10.png')));
 app.use('/chrc0', express.static(path.join(__dirname, '/assets/characters/0.png')));
 app.use('/chrc1', express.static(path.join(__dirname, '/assets/characters/1.png')));
 app.use('/chrc2', express.static(path.join(__dirname, '/assets/characters/2.png')));
